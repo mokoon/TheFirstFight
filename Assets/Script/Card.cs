@@ -14,9 +14,11 @@ public class Card : MonoBehaviour
 
     public enum CardType
     {
+        None,  // 카드가 선택되지 않았음을 나타냄
         Slash, // 베기
         Block, // 막기
         Stab   // 찌르기
+
     }
 
     public CardType cardType; // 카드의 종류를 저장하는 변수

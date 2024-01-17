@@ -8,6 +8,7 @@ public class PlayAreaManager : MonoBehaviour
     public BoxCollider2D playAreaCollider;
     public TextMeshProUGUI messageText;
     public TurnManager turnManager;
+
     void Start()
     {
         messageText.text = "";
@@ -27,6 +28,7 @@ public class PlayAreaManager : MonoBehaviour
                     Debug.Log("카드 수행: " + card.cardType.ToString());
                     card.ReturnToInitialPosition();
                     cardFound = true;
+                    turnManager.playerCardType = card.cardType;
                     turnManager.ChangeTurn();
                     break;
                 }
@@ -37,6 +39,7 @@ public class PlayAreaManager : MonoBehaviour
         {
             StartCoroutine(ShowMessage("카드를 올려주세요!", 1));
         }
+        cardFound = false;
     }
 
     IEnumerator ShowMessage(string message, float delay)
