@@ -12,6 +12,15 @@ public class Card : MonoBehaviour
     private BoxCollider2D cardCollider;
     private BoxCollider2D playAreaCollider;
 
+    public enum CardType
+    {
+        Slash, // 베기
+        Block, // 막기
+        Stab   // 찌르기
+    }
+
+    public CardType cardType; // 카드의 종류를 저장하는 변수
+
     void Start()
     {
         initialPosition = transform.position; // 카드의 초기 위치 저장
@@ -78,7 +87,7 @@ public class Card : MonoBehaviour
         transform.position = playAreaCollider.bounds.center;
     }
 
-    private void ReturnToInitialPosition()
+    public void ReturnToInitialPosition()
     {
         StartCoroutine(ReturnToStartPosition());
     }
