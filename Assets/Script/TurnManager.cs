@@ -19,10 +19,24 @@ public class TurnManager : MonoBehaviour
     public GameActions gameActions; // Inspector에서 할당
     public Card.CardType playerCardType = Card.CardType.Block; // 초기값 설정
     private Card.CardType lastCpuCardType = Card.CardType.Block; // 초기값 설정
+    public Card.CardType lastPlayerCardType = Card.CardType.None;
+    private bool isFirstPlayerTurn = true; // 선후공 추적을 위한 변수
+    private bool isGameOver = false;
 
     void Start()
     {
         SetTurn(Turn.Player);
+    }
+
+    public void EndGame()
+    {
+        isGameOver = true;
+        // 필요한 경우 추가적인 게임 종료 로직 구현
+    }
+
+    public bool IsGameOver()
+    {
+        return isGameOver;
     }
 
     void UpdateTurnIndicator()
@@ -46,6 +60,7 @@ public class TurnManager : MonoBehaviour
 
     public void ChangeTurn()
     {
+        if (isGameOver) return;
         // 턴 순서에 따라 다음 턴 설정
         switch (currentTurn)
         {
@@ -56,10 +71,12 @@ public class TurnManager : MonoBehaviour
                 SetTurn(Turn.ActionPhase);
                 break;
             case Turn.ActionPhase:
+                isFirstPlayerTurn = !isFirstPlayerTurn; // 선후공 교대
                 SetTurn(Turn.Player); // 동작 수행 후 플레이어 턴으로 돌아감
                 break;
         }
     }
+
 
     public void SetTurn(Turn turn)
     {
@@ -83,7 +100,7 @@ public class TurnManager : MonoBehaviour
 
     IEnumerator PlayerTurn()
     {
-        playerCardType = Card.CardType.None; // 카드 선택 초기화
+        //playerCardType = Card.CardType.None; // 카드 선택 초기화
         yield return new WaitUntil(() => playerCardType != Card.CardType.None); // 플레이어가 카드를 선택할 때까지 대기
 
         // 플레이어가 카드를 선택하면 턴 전환 로직 실행
@@ -113,9 +130,6 @@ public class TurnManager : MonoBehaviour
         // 선택된 행동 저장 및 처리
         lastCpuCardType = chosenAction;
         // 예: 선택된 카드 타입에 따른 로직 실행
-
-        // 동작 수행 페이즈로 넘어감
-        StartCoroutine(ExecuteActions());
     }
 
 
@@ -125,7 +139,20 @@ public class TurnManager : MonoBehaviour
         // 예: 플레이어와 CPU의 선택에 따른 결과 처리
 
         yield return StartCoroutine(gameActions.ExecuteActions(playerCardType, lastCpuCardType));
-
+        playerCardType = Card.CardType.None; // 카드 선택 초기화
+        yield return new WaitForSeconds(1);
         ChangeTurn(); // 동작 수행 페이즈 종료 후 플레이어 턴으로 변경
+    }
+
+    public void EndTurn()
+    {
+        lastPlayerCardType = playerCardType; // 마지막 플레이어 카드 타입 저장
+        ChangeTurn();
+    }
+
+    // 선후공 상태를 반환하는 메서드
+    public bool IsFirstPlayerTurn()
+    {
+        return isFirstPlayerTurn;
     }
 }

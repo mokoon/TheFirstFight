@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Card : MonoBehaviour
@@ -11,6 +12,9 @@ public class Card : MonoBehaviour
     public float returnSpeed = 20.0f; // 카드가 초기 위치로 돌아가는 속도. 사용자가 조절할 수 있습니다.
     private BoxCollider2D cardCollider;
     private BoxCollider2D playAreaCollider;
+
+    public string cardDescription; // 카드 설명
+    public TextMeshProUGUI descriptionText; // 카드 설명을 표시할 UI Text
 
     public enum CardType
     {
@@ -107,5 +111,18 @@ public class Card : MonoBehaviour
     public void SetReturnSpeed(float speed)
     {
         returnSpeed = speed;
+    }
+
+    void OnMouseEnter()
+    {
+        // 마우스가 카드 위에 있을 때 설명 텍스트 활성화 및 내용 설정
+        descriptionText.text = cardDescription;
+        descriptionText.gameObject.SetActive(true);
+    }
+
+    void OnMouseExit()
+    {
+        // 마우스가 카드에서 벗어났을 때 설명 텍스트 비활성화
+        descriptionText.gameObject.SetActive(false);
     }
 }

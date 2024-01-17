@@ -25,21 +25,30 @@ public class PlayAreaManager : MonoBehaviour
                 Card card = hitCollider.gameObject.GetComponent<Card>();
                 if (card != null)
                 {
+                    if (card.cardType == Card.CardType.Slash && turnManager.lastPlayerCardType == Card.CardType.Slash)
+                    {
+                        StartCoroutine(ShowMessage("이전턴에 베기를 사용하였습니다!", 1));
+                        card.ReturnToInitialPosition(); // 카드를 초기 위치로 되돌림
+                        return; // 메서드 종료
+                    }
                     Debug.Log("카드 수행: " + card.cardType.ToString());
                     card.ReturnToInitialPosition();
                     cardFound = true;
                     turnManager.playerCardType = card.cardType;
-                    turnManager.ChangeTurn();
+                    //turnManager.ChangeTurn();
                     break;
                 }
             }
         }
 
-        if (!cardFound)
+        if (cardFound)
         {
-            StartCoroutine(ShowMessage("카드를 올려주세요!", 1));
+            turnManager.EndTurn();
         }
-        cardFound = false;
+        else
+        {
+            StartCoroutine(ShowMessage("카드를 올려주세요!", 1)); // 카드가 없을 경우 메시지 표시
+        }
     }
 
     IEnumerator ShowMessage(string message, float delay)
