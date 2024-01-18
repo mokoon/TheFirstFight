@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class Move_next_Scene : MonoBehaviour
+public class HotMulti_GameOver : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -15,15 +14,5 @@ public class Move_next_Scene : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public void SoloPlay()
-    {
-        SceneManager.LoadScene("SoloPlay");
-    }
-
-    public void HotSeatPlay()
-    {
-        SceneManager.LoadScene("HotSeatPlay");
     }
 }
